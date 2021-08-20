@@ -1,0 +1,1 @@
+ALTER TABLE logistics.clientes RENAME COLUMN telefone TO fone

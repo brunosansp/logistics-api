@@ -1,30 +1,68 @@
 package com.brunosan.logistics.api.controller;
 
 import com.brunosan.logistics.domain.model.Cliente;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.brunosan.logistics.domain.repository.ClienteRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClientController {
 
-    @GetMapping("/clientes")
+    private ClienteRepository clienteRepository;
+
+    @GetMapping
     public List<Cliente> listar() {
-        Cliente cliente1 = new Cliente();
-        cliente1.setId(1L);
-        cliente1.setNome("Bruno");
-        cliente1.setEmail("bruno@gmail.com");
-        cliente1.setTelefone("11 98989-5656");
+        return clienteRepository.findAll();
+//        return clienteRepository.findByNome("Bruno");
+//        return clienteRepository.findByNomeContaining("a");
+    }
 
-        Cliente cliente2 = new Cliente();
-        cliente2.setId(2L);
-        cliente2.setNome("Talita");
-        cliente2.setEmail("talita@gmail.com");
-        cliente2.setTelefone("11 95656-8989");
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> findClienteById(@PathVariable Long id) {
+        return clienteRepository.findById(id)
+//                .map(cliente -> ResponseEntity.ok(cliente))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
 
-        return Arrays.asList(cliente1, cliente2);
 
+        /*Optional<Cliente> cliente = clienteRepository.findById(id);
+
+        if (!cliente.isEmpty()) {
+            return ResponseEntity.ok(cliente.get());
+        }
+        return ResponseEntity.noContent().build();*/
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cliente adicioanr(@RequestBody Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> atualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
+        if (!clienteRepository.existsById(id))
+            return ResponseEntity.badRequest().build();
+
+        cliente.setId(id);
+        cliente = clienteRepository.save(cliente);
+
+        return ResponseEntity.ok(cliente);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        if (!clienteRepository.existsById(id))
+            return ResponseEntity.badRequest().build();
+
+        clienteRepository.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 }
