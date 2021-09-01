@@ -2,6 +2,7 @@ package com.brunosan.logistics.api.controller;
 
 import com.brunosan.logistics.domain.model.Cliente;
 import com.brunosan.logistics.domain.repository.ClienteRepository;
+import com.brunosan.logistics.domain.service.CatalogoClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,11 @@ import java.util.List;
 public class ClientController {
 
     private ClienteRepository clienteRepository;
+    private CatalogoClienteService catalogoClienteService;
 
     @GetMapping
     public List<Cliente> listar() {
         return clienteRepository.findAll();
-//        return clienteRepository.findByNome("Bruno");
-//        return clienteRepository.findByNomeContaining("a");
     }
 
     @GetMapping("/{id}")
@@ -43,7 +43,8 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicioanr(@Valid @RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+//        return clienteRepository.save(cliente);
+        return catalogoClienteService.salvar(cliente);
     }
 
     @PutMapping("/{id}")
@@ -52,18 +53,17 @@ public class ClientController {
             return ResponseEntity.badRequest().build();
 
         cliente.setId(id);
-        cliente = clienteRepository.save(cliente);
+        cliente = catalogoClienteService.salvar(cliente);
 
         return ResponseEntity.ok(cliente);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        if (!clienteRepository.existsById(id))
+    public ResponseEntity<Void> remover(@PathVariable Long clienteId) {
+        if (!clienteRepository.existsById(clienteId))
             return ResponseEntity.badRequest().build();
 
-        clienteRepository.deleteById(id);
-
+        catalogoClienteService.excluir(clienteId);
         return ResponseEntity.ok().build();
     }
 }
