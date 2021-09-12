@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-@Entity(name = "clientes")
+@Entity(name = "cliente")
 public class Cliente {
 
     @EqualsAndHashCode.Include
