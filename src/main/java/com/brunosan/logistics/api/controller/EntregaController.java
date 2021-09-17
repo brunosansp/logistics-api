@@ -4,6 +4,7 @@ import com.brunosan.logistics.api.assembler.EntregaResponse;
 import com.brunosan.logistics.api.model.EntregaModel;
 import com.brunosan.logistics.api.model.request.EntregaRequest;
 import com.brunosan.logistics.domain.model.Entrega;
+import com.brunosan.logistics.domain.model.Ocorrencia;
 import com.brunosan.logistics.domain.repository.EntregaRepository;
 import com.brunosan.logistics.domain.service.SolicitacaoEntregaService;
 import lombok.AllArgsConstructor;
