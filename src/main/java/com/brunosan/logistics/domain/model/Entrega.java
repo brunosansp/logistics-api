@@ -1,6 +1,7 @@
 package com.brunosan.logistics.domain.model;
 
 import com.brunosan.logistics.domain.ValidationGroups;
+import com.brunosan.logistics.domain.exception.NegocioException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,5 +55,13 @@ public class Entrega {
         this.getOcorrencias().add(ocorrencia);
 
         return ocorrencia;
+    }
+
+    public void finalizar() {
+        if(!StatusEntrega.PENDENTE.equals(getStatus())){
+            throw new NegocioException("Entrega não pode ser finalizada.");
+        }
+        setStatus(StatusEntrega.FINALIZADA);
+        setDataFinalizacao(OffsetDateTime.now());
     }
 }

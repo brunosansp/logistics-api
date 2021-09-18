@@ -6,6 +6,7 @@ import com.brunosan.logistics.api.model.request.EntregaRequest;
 import com.brunosan.logistics.domain.model.Entrega;
 import com.brunosan.logistics.domain.model.Ocorrencia;
 import com.brunosan.logistics.domain.repository.EntregaRepository;
+import com.brunosan.logistics.domain.service.FinalizacaoEntregaService;
 import com.brunosan.logistics.domain.service.SolicitacaoEntregaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class EntregaController {
     private EntregaRepository entregaRepository;
     private SolicitacaoEntregaService solicitacaoEntregaService;
     private EntregaResponse entregaResponse;
+    private FinalizacaoEntregaService finalizacaoEntregaService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,5 +46,11 @@ public class EntregaController {
         return entregaRepository.findById(entregaId)
                 .map(entrega -> ResponseEntity.ok(entregaResponse.toModel(entrega)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{entregaId}/finalizacao")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void finalizar(@PathVariable Long entregaId) {
+        finalizacaoEntregaService.finalizar(entregaId);
     }
 }
